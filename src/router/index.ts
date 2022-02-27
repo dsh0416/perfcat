@@ -4,13 +4,13 @@ import {
   createWebHashHistory,
   RouteRecordRaw,
 } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import PerfView from "../views/PerfView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "performance",
+    component: PerfView,
   },
   {
     path: "/about",

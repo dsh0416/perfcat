@@ -1,4 +1,12 @@
 <template lang="pug">
 .about
-  | Made with ❤️ by Delton Ding
+  h1
+    | Perfcat
+  | Proudly made with ❤️ by Delton Ding.
 </template>
+
+<style lang="stylus" scoped>
+.about
+  text-align center
+  padding-top 50px
+</style>
