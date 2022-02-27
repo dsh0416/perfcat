@@ -3,24 +3,29 @@
   h2
     | Perfcat
   el-form(label-width="80px")
-    el-form-item(label="Backend")
-      el-select(placeholder="Backend")
+    el-form-item(:label="t('el.perfcat.backend')")
+      el-select(:placeholder="t('el.perfcat.backend')")
         el-option(label="macOS" value="native")
-    el-form-item(label="Device")
-      el-select(placeholder="Device")
-    el-form-item(label="Application")
-      el-select(placeholder="Application")
-    el-form-item(label="Surface")
-      el-select(placeholder="Surface")
-    el-form-item(label="Target FPS")
+    el-form-item(:label="t('el.perfcat.device')")
+      el-select(:placeholder="t('el.perfcat.device')")
+    el-form-item(:label="t('el.perfcat.application')")
+      el-select(:placeholder="t('el.perfcat.application')")
+    el-form-item(:label="t('el.perfcat.window')")
+      el-select(:placeholder="t('el.perfcat.window')")
+    el-form-item(:label="t('el.perfcat.target_fps')")
       el-input-number.fix-height(:min="1" :max="300" :step="1" v-model="val")
-    el-form-item(label="Actions")
-      el-button(type="primary") Submit
-      el-button(type="danger") Record
+    el-form-item(:label="t('el.perfcat.actions')")
+      el-button(type="primary")
+        | {{ t("el.perfcat.submit") }}
+      el-button(type="danger")
+        | {{ t("el.perfcat.record") }}
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
+const { t } = useI18n();
 const val = 60;
 /* eslint-enable */
 </script>

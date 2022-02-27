@@ -7,10 +7,14 @@ el-config-provider(:locale="languageStore.locale")
       el-container
         el-header
           el-menu(mode="horizontal", router, default-active="/")
-            el-menu-item(index="/") Performance
-            el-menu-item(disabled) Export
-            el-menu-item(disabled) Advanced
-            el-menu-item(index="/about") About
+            el-menu-item(index="/") 
+              | {{ t("el.perfcat.performance") }}
+            el-menu-item(disabled)
+              | {{ t("el.perfcat.export") }}
+            el-menu-item(disabled)
+              | {{ t("el.perfcat.advanced") }}
+            el-menu-item(index="/about")
+              | {{ t("el.perfcat.about") }}
         el-main.main
           router-view
     el-footer
@@ -29,9 +33,11 @@ export default {
 
 <script lang="ts" setup>
 import { useLanguageStore } from "@/stores/language";
+import { useI18n } from "vue-i18n";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const languageStore = useLanguageStore();
+const { t } = useI18n();
 /* eslint-enable */
 </script>
 

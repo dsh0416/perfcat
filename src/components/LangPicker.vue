@@ -15,9 +15,11 @@ export default {
 
 <script lang="ts" setup>
 import { useLanguageStore } from "@/stores/language";
+import { useI18n } from "vue-i18n";
 import { reactive } from "vue";
 
 const language = useLanguageStore();
+const i18n = useI18n({ useScope: "global" });
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const form = reactive({
@@ -26,6 +28,7 @@ const form = reactive({
 
 const langChange = (val: string) => {
   language.setLang(val);
+  i18n.locale.value = val;
 };
 /* eslint-enable */
 </script>

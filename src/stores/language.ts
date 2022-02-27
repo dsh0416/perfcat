@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import en from "element-plus/lib/locale/lang/en";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import en from "@/i18n/en";
+import zhCn from "@/i18n/zh-cn";
 import { Language } from "element-plus/lib/locale";
 
 interface LanguageStore {
@@ -16,7 +16,6 @@ export const useLanguageStore = defineStore("language", {
   },
   actions: {
     setLang(lang: string) {
-      console.log("here");
       this.lang = lang;
 
       if (lang == "en") {
