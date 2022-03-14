@@ -17,7 +17,7 @@ const exp: Language = {
       record: "录制",
       submit: "提交",
       window: "窗口",
-      target_fps: "目标 FPS",
+      targetFps: "目标 FPS",
     },
   },
 };

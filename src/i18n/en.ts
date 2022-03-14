@@ -17,7 +17,7 @@ const exp: Language = {
       record: "Record",
       submit: "Submit",
       window: "Window",
-      target_fps: "Target FPS",
+      targetFps: "Target FPS",
     },
   },
 };
