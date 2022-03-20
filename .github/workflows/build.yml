@@ -21,16 +21,16 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v1
         with:
-          fetch-depth: 2
-      - name: Use Node.js 17.x
+          fetch-depth: 1
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: yarn
+      - name: Yarn
         run: |
           yarn global add electron-builder
           yarn
-      - name: Publish
+      - name: Build
         env:
           USE_HARD_LINKS: "false"
         run: |
