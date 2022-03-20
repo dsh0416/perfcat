@@ -45,17 +45,17 @@ const submitted = reactive({
 const dataUpdate = async () => {
   const time = Date.now();
   if (submitted.backend == null || submitted.device == null) {
-    chartData.cpuData.push([time, Math.random()]);
-    chartData.memData.push([time, Math.random()]);
-    chartData.frameData.push([time, Math.random() * 60]);
+    chartData.cpuData.push([time, 0]);
+    chartData.memData.push([time, 0]);
+    chartData.frameData.push([time, 0]);
     return;
   }
 
   if (submitted.surface == null) {
     const cpu = await submitted.device.getCpuUsage();
     const mem = await submitted.device.getMemUsage();
-    chartData.cpuData.push([time, 0]);
-    chartData.memData.push([time, 0]);
+    chartData.cpuData.push([time, cpu]);
+    chartData.memData.push([time, mem]);
     chartData.frameData.push([time, 0]);
     return;
   }
@@ -63,8 +63,8 @@ const dataUpdate = async () => {
   const cpu = await submitted.device.getCpuUsage();
   const mem = await submitted.device.getMemUsage();
   // TODO: Get FPS
-  chartData.cpuData.push([time, 0]);
-  chartData.memData.push([time, 0]);
+  chartData.cpuData.push([time, cpu]);
+  chartData.memData.push([time, mem]);
   chartData.frameData.push([time, 0]);
 };
 
@@ -72,6 +72,9 @@ onMounted(() => {
   const frameChart = echarts.init(frameView.value);
   const cpuChart = echarts.init(cpuView.value);
   const memChart = echarts.init(memView.value);
+
+  // submitted.backend = ;
+  // submitted.device = new MacOsDevice();
 
   const chartUpdate = () => {
     dataUpdate();

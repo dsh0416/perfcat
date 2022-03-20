@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 2
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17.x
+      - name: yarn
+        run: |
+          export FRIDA=`pwd`/frida-node
+          yarn global add electron-builder
+          yarn
+      - name: Publish
+        env:
+          USE_HARD_LINKS: "false"
+        run: |
+          npm run electron:build
+      - name: Cleanup artifacts macOS
+        if: matrix.os == 'macOS-latest'
+        run: |
+          mkdir artifacts
+          mv dist_electron/*.dmg artifacts || true
+      - name: Cleanup artifacts ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir artifacts
+          mv dist_electron/*.AppImage artifacts || true
+      - name: Cleanup artifacts Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir artifacts
+          mv dist_electron/*.exe artifacts
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{matrix.os}}
+          path: artifacts

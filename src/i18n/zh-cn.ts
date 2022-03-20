@@ -16,7 +16,7 @@ const exp: Language = {
       performance: "性能",
       record: "录制",
       submit: "提交",
-      window: "窗口",
+      surface: "图形窗口",
       targetFps: "目标 FPS",
     },
   },

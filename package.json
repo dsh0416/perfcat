@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.0",
+    "@types/os-utils": "^0.0.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
@@ -47,5 +48,6 @@
     "stylus-loader": "^6.1.0",
     "typescript": "~4.5.5",
     "vue-cli-plugin-electron-builder": "~2.1.1"
-  }
+  },
+  "__npminstall_done": false
 }

@@ -11,8 +11,7 @@ interface LanguageStore {
 
 export const useLanguageStore = defineStore("language", {
   state: () => {
-    const ret: LanguageStore = { lang: "en", locale: en };
-    return ret;
+    return { lang: "en", locale: en } as LanguageStore;
   },
   actions: {
     setLang(lang: string) {

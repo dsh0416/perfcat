@@ -16,7 +16,7 @@ const exp: Language = {
       performance: "Performance",
       record: "Record",
       submit: "Submit",
-      window: "Window",
+      surface: "Surface",
       targetFps: "Target FPS",
     },
   },

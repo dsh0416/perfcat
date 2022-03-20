@@ -1,20 +1,43 @@
-// import { Application, Backend, Device } from "./backend";
+import type { IApplication, IBackend, IDevice } from "./ibackend";
 
-// export default class MacOsBackend implements Backend {
-//   public name = "macOS";
-//   public value = "macos";
-//   public available = process.platform == "darwin";
+const { os } = window.native;
 
-//   public async getDevices(): Promise<Device[]> {
-//     return [new MacOsDevice()];
-//   }
-// }
+export class MacOsBackend implements IBackend {
+  public name = "macOS";
+  public value = "macos";
+  public available = process.platform == "darwin";
 
-// class MacOsDevice implements Device {
-//   public name = "native";
-//   public value = "native";
+  public async getDevices(): Promise<IDevice[]> {
+    return [new MacOsDevice()];
+  }
+}
 
-//   public async getApplications(): Promise<Application[]> {
-//     throw new Error("Method not implemented.");
-//   }
-// }
+export class MacOsDevice implements IDevice {
+  public name = "Native";
+  public value = "native";
+
+  public getCpuUsage(): Promise<number> {
+    return new Promise<number>((resolve) => {
+      os.cpuUsage((v) => {
+        resolve(v);
+      });
+    });
+  }
+
+  public async getMemUsage(): Promise<number> {
+    console.log(os.freemem());
+    return 1 - os.freememPercentage();
+  }
+
+  public getCpuCount(): number {
+    return os.cpuCount();
+  }
+
+  public getMemTotal(): number {
+    return os.totalmem();
+  }
+
+  public async getApplications(): Promise<IApplication[]> {
+    return [];
+  }
+}
