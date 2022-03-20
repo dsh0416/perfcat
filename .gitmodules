@@ -1,3 +1,0 @@
-[submodule "frida-node"]
-	path = frida-node
-	url = https://github.com/frida/frida-node.git

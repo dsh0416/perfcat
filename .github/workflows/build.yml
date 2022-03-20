@@ -25,10 +25,9 @@ jobs:
       - name: Use Node.js 17.x
         uses: actions/setup-node@v1
         with:
-          node-version: 17.x
+          node-version: 16.x
       - name: yarn
         run: |
-          export FRIDA=`pwd`/frida-node
           yarn global add electron-builder
           yarn
       - name: Publish
