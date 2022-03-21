@@ -54,6 +54,8 @@ jobs:
           pip install colorama prompt-toolkit pygments
       - name: Create Certificate (macOS)
         if: matrix.os == 'macos-latest'
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
         run: |
           sudo ./scripts/macos-setup-codesign-action.sh
       - name: Build Frida (Linux)
