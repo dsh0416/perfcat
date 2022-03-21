@@ -35,16 +35,14 @@ EOF
 openssl req -new -newkey rsa:2048 -x509 -days 3650 -nodes -config "$DIR/$CERT.tmpl" -extensions codesign_reqext -batch -out "$DIR/$CERT.cer" -keyout "$DIR/$CERT.key" > /dev/null 2>&1
 [ $? -eq 0 ] || error Something went wrong when generating the certificate
 
-# create temporary keychain
-KEYCHAIN_PATH=$DIR/app-signing.keychain-db
-security create-keychain -p "KEYCHAIN_PASSWORD_EXAMPLE" $KEYCHAIN_PATH
-security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-security unlock-keychain -p "KEYCHAIN_PASSWORD_EXAMPLE" $KEYCHAIN_PATH
+# Magic. Very dangerous.
+sudo security authorizationdb write com.apple.trust-settings.admin allow
 
 # Install the certificate in the system keychain
-sudo security add-trusted-cert -r trustRoot -p codeSign -k $KEYCHAIN_PATH "$DIR/$CERT.cer" > /dev/null 2>&1
-sudo security import "$DIR/$CERT.key" -A -k $KEYCHAIN_PATH > /dev/null 2>&1
-sudo security list-keychain -d system -s $KEYCHAIN_PATH
+sudo security add-trusted-cert -r unspecified -p codeSign -k /Library/Keychains/System.keychain "$DIR/$CERT.cer"
+sudo security import "$DIR/$CERT.key" -A -k /Library/Keychains/System.keychain
+
+sudo pkill -f /usr/libexec/taskgated > /dev/null 2>&1
 
 # Exit indicating the certificate is now generated and installed
 exit 0
