@@ -19,6 +19,9 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
       - name: Get Frida v15.1.17
         run: |
           git clone --recursive https://github.com/frida/frida.git

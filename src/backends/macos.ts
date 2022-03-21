@@ -55,7 +55,7 @@ export class MacOsApplication implements IApplication {
   public pid = 0;
 
   constructor(name: string, pid: number) {
-    this.name = `${name} (PID: ${pid})`;
+    this.name = `PID: ${pid.toString().padStart(5, "0")} | ${name} `;
     this.value = pid.toString();
     this.pid = pid;
   }
