@@ -19,10 +19,11 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v3
+      - name: Checkout Perfcat
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - name: Get Frida v15.1.17
+      - name: Checkout Frida v15.1.17
         run: |
           git clone --recursive https://github.com/frida/frida.git
           cd frida
@@ -49,6 +50,8 @@ jobs:
           mv ../tsconfig.json ../tsconfig.json.muted
           make node-linux-x86_64 NODE=$(which node)
           mv ../tsconfig.json.muted ../tsconfig.json
+          cd frida-node
+          npm run prebuild -- -t 13.3.0 -r electron
       - name: Yarn
         env:
           npm_config_runtime: electron
