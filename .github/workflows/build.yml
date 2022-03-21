@@ -11,8 +11,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latext]
 
     steps:
       - name: Echo Context
@@ -51,6 +52,10 @@ jobs:
       - name: Install Python Global Deps
         run: |
           pip install colorama prompt-toolkit pygments
+      - name: Create Certificate (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          ./scripts/macos-setup-codesign.sh
       - name: Build Frida (Linux)
         if: matrix.os == 'ubuntu-latest'
         working-directory: ../frida
@@ -60,8 +65,26 @@ jobs:
           npm_config_disturl: https://electronjs.org/headers
         run: |
           make node-linux-x86_64 NODE=$(which node)
-          export FRIDA=$(pwd)
-          cd frida-node
+      - name: Build Frida (MacOS)
+        if: matrix.os == 'macos-latest'
+        working-directory: ../frida
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+          MACOS_CERTID: frida-cert
+        run: |
+          make node-macos NODE=$(which node)
+      - name: Build Frida Node (*NIX)
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+        working-directory: ../frida/frida-node
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+          MACOS_CERTID: frida-cert
+        run: |
+          export FRIDA=$(pwd)/../
           npm install
           npm run prebuild -- -t 13.3.0 -r electron
           ln -s $(pwd)/../ ../../perfcat/frida
@@ -92,7 +115,7 @@ jobs:
         run: |
           mkdir artifacts
           mv dist_electron/*.exe artifacts
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{matrix.os}}
