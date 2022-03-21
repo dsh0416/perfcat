@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Context
@@ -32,23 +32,31 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      - name: Install System Requirements (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib
       - name: Install Node Global Deps
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
         run: |
           yarn global add node-gyp
           yarn global add prebuild
           yarn global add electron-builder
-      - name: Build Frida (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      - name: Build Frida (*nix)
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         working-directory: ./frida
         env:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-multilib g++-multilib
+          export FRIDA=$(pwd)
           mv ../tsconfig.json ../tsconfig.json.muted
-          make node-linux-x86_64 NODE=$(which node)
+          make -j $(nproc) node-linux-x86_64 NODE=$(which node)
           mv ../tsconfig.json.muted ../tsconfig.json
           cd frida-node
           npm run prebuild -- -t 13.3.0 -r electron
