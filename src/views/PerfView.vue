@@ -24,6 +24,7 @@ import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { generateFrameChart } from "@/charts/frame-chart";
 import { generateCpuChart } from "@/charts/cpu-chart";
 import { generateMemChart } from "@/charts/mem-chart";
+import { MacOsBackend, MacOsDevice } from "@/backends/macos";
 
 const frameView = ref();
 const cpuView = ref();
@@ -73,8 +74,8 @@ onMounted(() => {
   const cpuChart = echarts.init(cpuView.value);
   const memChart = echarts.init(memView.value);
 
-  // submitted.backend = ;
-  // submitted.device = new MacOsDevice();
+  submitted.backend = new MacOsBackend();
+  submitted.device = new MacOsDevice();
 
   const chartUpdate = () => {
     dataUpdate();

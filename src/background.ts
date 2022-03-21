@@ -3,7 +3,7 @@
 import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
-import * as path from "path";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Scheme must be registered before the app is ready
@@ -17,12 +17,11 @@ async function createWindow() {
     width: 1280,
     height: 960,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env
-        .ELECTRON_NODE_INTEGRATION as unknown as boolean,
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      enableRemoteModule: true,
       contextIsolation: false,
-      preload: path.join(__dirname, "preload.js"),
+      webviewTag: true,
     },
   });
 
@@ -36,6 +35,8 @@ async function createWindow() {
     win.loadURL("app://./index.html");
   }
 }
+
+app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

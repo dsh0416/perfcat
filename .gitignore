@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# Frida build
+/frida
+
 
 # local env files
 .env.local

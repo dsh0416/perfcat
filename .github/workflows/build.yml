@@ -12,24 +12,41 @@ jobs:
 
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: Use Node.js 16.x
+      - uses: Get Frida v15.1.17
+        run:
+          git clone --recursive https://github.com/frida/frida.git
+          cd frida
+          git checkout 15.1.17
+      - name: Use Node.js v14.x
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 14.x
+      - name: Build Frida (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+        run:
+          cd frida/frida-node
+          npm install --global add node-gyp
+          npm install --global prebuild
+          make node-linux-x86_64 NODE=$(which node)
       - name: Yarn
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
         run: |
-          yarn global add electron-builder
-          yarn
+          npm install --global electron-builder
+          npm install
       - name: Build
         env:
           USE_HARD_LINKS: "false"

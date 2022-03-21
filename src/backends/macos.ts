@@ -1,6 +1,7 @@
-import type { IApplication, IBackend, IDevice } from "./ibackend";
+import type { IApplication, IBackend, IDevice, ISurface } from "./ibackend";
 
-const { os } = window.native;
+import * as os from "os-utils";
+import * as frida from "frida";
 
 export class MacOsBackend implements IBackend {
   public name = "macOS";
@@ -25,7 +26,6 @@ export class MacOsDevice implements IDevice {
   }
 
   public async getMemUsage(): Promise<number> {
-    console.log(os.freemem());
     return 1 - os.freememPercentage();
   }
 
@@ -38,6 +38,34 @@ export class MacOsDevice implements IDevice {
   }
 
   public async getApplications(): Promise<IApplication[]> {
-    return [];
+    const device = await frida.getLocalDevice();
+    const processes = await device.enumerateProcesses();
+    return processes.map((process) => {
+      return new MacOsApplication(process.name, process.pid);
+    });
+  }
+}
+
+export class MacOsApplication implements IApplication {
+  public name = "";
+  public value = "";
+  public url = "";
+  public pid = 0;
+
+  constructor(name: string, pid: number) {
+    this.name = `${name} (PID: ${pid})`;
+    this.value = pid.toString();
+    this.pid = pid;
+  }
+
+  public async getSurfaces(): Promise<ISurface[]> {
+    const surfaces: ISurface[] = [];
+    try {
+      const session = await frida.attach(this.pid);
+      await session.detach();
+    } catch (e) {
+      console.log(e);
+    }
+    return surfaces;
   }
 }
