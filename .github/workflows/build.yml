@@ -36,9 +36,9 @@ jobs:
           yarn global add node-gyp
           yarn global add prebuild
           yarn global add electron-builder
-      - name: Build Frida (Linux)
+      - name: Build Frida Node (Linux)
         if: matrix.os == 'ubuntu-latest'
-        working-directory: ./frida
+        working-directory: ./frida/frida-node
         env:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
@@ -46,7 +46,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-multilib g++-multilib
-          make node-linux-x86_64 NODE=$(which node)
+          FRIDA=$(pwd)/../ npm install
+          FRIDA=$(pwd)/../ npm run prebuild -- -t 13.3.0 -r electron
       - name: Yarn
         env:
           npm_config_runtime: electron
