@@ -24,10 +24,9 @@ jobs:
         with:
           fetch-depth: 1
       - name: Checkout Frida v15.1.17
-        working-directory: ../frida
         run: |
-          git clone --recursive https://github.com/frida/frida.git
-          cd frida
+          git clone --recursive https://github.com/frida/frida.git ../frida
+          cd ../frida
           git checkout 15.1.17
       - name: Use Node.js v14.x
         uses: actions/setup-node@v2
