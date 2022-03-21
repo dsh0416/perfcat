@@ -41,10 +41,14 @@ security create-keychain -p "KEYCHAIN_PASSWORD_EXAMPLE" $KEYCHAIN_PATH
 security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
 security unlock-keychain -p "KEYCHAIN_PASSWORD_EXAMPLE" $KEYCHAIN_PATH
 
+# Install the certificate in the system keychain
+security add-trusted-cert -d -r trustRoot -p codeSign -k $KEYCHAIN_PATH "$DIR/$CERT.cer" > /dev/null 2>&1
+[ $? -eq 0 ] || error Something went wrong when installing the certificate
+
 # Install the key for the certificate in the system keychain
 security import "$DIR/$CERT.key" -A -k $KEYCHAIN_PATH > /dev/null 2>&1
 [ $? -eq 0 ] || error Something went wrong when installing the key
-security list-keychain -d user -s $KEYCHAIN_PATH
+security list-keychain -d system -s $KEYCHAIN_PATH
 
 # Exit indicating the certificate is now generated and installed
 exit 0
