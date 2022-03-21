@@ -20,7 +20,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - name: Get Frida v15.1.17
-        run:
+        run: |
           git clone --recursive https://github.com/frida/frida.git
           cd frida
           git checkout 15.1.17
@@ -34,7 +34,7 @@ jobs:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
-        run:
+        run: |
           cd frida/frida-node
           yarn global add add node-gyp
           yarn global add prebuild
