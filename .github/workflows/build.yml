@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latext]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Echo Context
