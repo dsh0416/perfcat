@@ -57,9 +57,10 @@ jobs:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
+          LC_ALL: en_US
         run: |
           mv ../tsconfig.json ../tsconfig.json.muted
-          make -j $(nproc) node-linux-x86_64 NODE=$(which node)
+          make node-linux-x86_64 NODE=$(which node)
           mv ../tsconfig.json.muted ../tsconfig.json
           export FRIDA=$(pwd)
           cd frida-node
