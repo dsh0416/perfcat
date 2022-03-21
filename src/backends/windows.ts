@@ -5,17 +5,17 @@ import { useAlertStore } from "@/stores/alert";
 
 import type { IApplication, IBackend, IDevice, ISurface } from "./ibackend";
 
-export class MacOsBackend implements IBackend {
-  public name = "macOS";
-  public value = "macos";
-  public available = process.platform == "darwin";
+export class WindowsBackend implements IBackend {
+  public name = "Windows";
+  public value = "windows";
+  public available = process.platform == "win32";
 
   public async getDevices(): Promise<IDevice[]> {
-    return [new MacOsDevice()];
+    return [new WindowsDevice()];
   }
 }
 
-export class MacOsDevice implements IDevice {
+export class WindowsDevice implements IDevice {
   public name = "Local";
   public value = "local";
 
@@ -43,12 +43,12 @@ export class MacOsDevice implements IDevice {
     const device = await frida.getLocalDevice();
     const processes = await device.enumerateProcesses();
     return processes.map((process) => {
-      return new MacOsApplication(process.name, process.pid);
+      return new WindowsApplication(process.name, process.pid);
     });
   }
 }
 
-export class MacOsApplication implements IApplication {
+export class WindowsApplication implements IApplication {
   public name = "";
   public value = "";
   public url = "";

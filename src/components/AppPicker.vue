@@ -2,6 +2,8 @@
 .app-picker
   h2
     | Perfcat
+  div
+    el-alert.alert(v-for="a in alerts", :key="a.id", :title="a.title", :type="a.type")
   el-form(label-width="80px", :model="form")
     el-form-item(:label="t('el.perfcat.backend')")
       el-select(:placeholder="t('el.perfcat.backend')", v-model="form.backend", @change="onFormChange")
@@ -34,15 +36,23 @@ import type {
   ISurface,
 } from "@/backends/ibackend";
 
-import { MacOsBackend } from "@/backends/macos";
+import { useAlertStore } from "@/stores/alert";
 import { useMonitorStore } from "@/stores/monitor";
 import type { MonitorTarget } from "@/stores/monitor";
+
+import { MacOsBackend } from "@/backends/macos";
+import { WindowsBackend } from "@/backends/windows";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const { t } = useI18n();
 /* eslint-enable */
 
 const monitor = useMonitorStore();
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const alerts = useAlertStore().alerts;
+/* eslint-enable */
+
 const target = reactive<MonitorTarget>({
   backend: null,
   device: null,
@@ -102,7 +112,7 @@ const onSubmit = () => {
 };
 /* eslint-enable */
 
-candidates.backends = [new MacOsBackend()].filter(
+candidates.backends = [new MacOsBackend(), new WindowsBackend()].filter(
   (backend) => backend.available
 );
 </script>
@@ -110,6 +120,9 @@ candidates.backends = [new MacOsBackend()].filter(
 <style lang="stylus" scoped>
 .app-picker
   padding 20px
+
+.alert
+  margin 10px 0
 
 .fix-height // element-ui bug, it goes to 33px by error
   height 32px

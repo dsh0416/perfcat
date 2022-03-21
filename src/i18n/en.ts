@@ -17,6 +17,8 @@ const exp: Language = {
       memStats: "Memoty Statistics",
       performance: "Performance",
       record: "Record",
+      sipError:
+        "SIP Enabled Detected. Require SIP Disabled for macOS frame capture.",
       submit: "Submit",
       surface: "Surface",
       targetFps: "Target FPS",

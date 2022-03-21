@@ -10,7 +10,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, defineProps } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import * as echarts from "echarts";
 
@@ -20,10 +20,6 @@ const { t } = useI18n();
 const monitor = useMonitorStore();
 
 const props = defineProps({
-  sampleRate: {
-    type: Number,
-    default: 1000,
-  },
   samples: {
     type: Number,
     default: 120,
@@ -40,7 +36,7 @@ onMounted(() => {
     chart.setOption(buildChart());
   };
 
-  const timer = window.setInterval(update, props.sampleRate);
+  const timer = window.setInterval(update, 500);
   window.addEventListener("resize", resizeHandler);
   onUnmounted(() => {
     window.clearInterval(timer);
@@ -99,7 +95,7 @@ const buildChart = () => {
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .echarts-view
   width 100%
   min-height 250px

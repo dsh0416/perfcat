@@ -32,13 +32,27 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { useLanguageStore } from "@/stores/language";
+import { exec } from "child_process";
+
 import { useI18n } from "vue-i18n";
+import { useAlertStore } from "@/stores/alert";
+import { useLanguageStore } from "@/stores/language";
+
+const { t } = useI18n();
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const languageStore = useLanguageStore();
-const { t } = useI18n();
 /* eslint-enable */
+
+// macOS Requires SIP disabled for frida hook working.
+if (process.platform === "darwin") {
+  exec("csrutil status", (_0, stdout, _2) => {
+    if (stdout === "System Integrity Protection status: enabled.\n") {
+      const alerts = useAlertStore();
+      alerts.alert(t("el.perfcat.sipError"), "error");
+    }
+  });
+}
 </script>
 
 <style lang="stylus">
