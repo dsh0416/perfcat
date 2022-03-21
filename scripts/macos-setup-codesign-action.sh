@@ -39,7 +39,7 @@ openssl req -new -newkey rsa:2048 -x509 -days 3650 -nodes -config "$DIR/$CERT.tm
 sudo security authorizationdb write com.apple.trust-settings.admin allow
 
 # Install the certificate in the system keychain
-sudo security add-trusted-cert -r unspecified -p codeSign -k /Library/Keychains/System.keychain "$DIR/$CERT.cer"
+sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$DIR/$CERT.cer"
 sudo security import "$DIR/$CERT.key" -A -k /Library/Keychains/System.keychain
 
 sudo pkill -f /usr/libexec/taskgated > /dev/null 2>&1
