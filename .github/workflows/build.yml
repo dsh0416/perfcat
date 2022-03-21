@@ -24,6 +24,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Checkout Frida v15.1.17
+        working-directory: ../frida
         run: |
           git clone --recursive https://github.com/frida/frida.git
           cd frida
@@ -52,33 +53,18 @@ jobs:
           yarn global add electron-builder
       - name: Build Frida (Linux)
         if: matrix.os == 'ubuntu-latest'
-        working-directory: ./frida
+        working-directory: ../frida
         env:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
           LC_ALL: en_US
         run: |
-          mv ../tsconfig.json ../tsconfig.json.muted
           make node-linux-x86_64 NODE=$(which node)
-          mv ../tsconfig.json.muted ../tsconfig.json
           export FRIDA=$(pwd)
           cd frida-node
           npm run prebuild -- -t 13.3.0 -r electron
-      - name: Build Frida (macOS)
-        if: matrix.os == 'macos-latest'
-        working-directory: ./frida
-        env:
-          npm_config_runtime: electron
-          npm_config_target: 13.3.0
-          npm_config_disturl: https://electronjs.org/headers
-        run: |
-          mv ../tsconfig.json ../tsconfig.json.muted
-          make -j $(nproc) node-macos NODE=$(which node)
-          mv ../tsconfig.json.muted ../tsconfig.json
-          export FRIDA=$(pwd)
-          cd frida-node
-          npm run prebuild -- -t 13.3.0 -r electron
+          ln -s . ../perfcat/frida
       - name: Yarn
         env:
           npm_config_runtime: electron
