@@ -15,7 +15,7 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-      - name: Context
+      - name: Echo Context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
@@ -77,17 +77,17 @@ jobs:
           USE_HARD_LINKS: "false"
         run: |
           yarn electron:build
-      - name: Cleanup artifacts (Linux)
+      - name: Cleanup Artifacts (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir artifacts
           mv dist_electron/*.AppImage artifacts || true
-      - name: Cleanup artifacts (macOS)
+      - name: Cleanup Artifacts (macOS)
         if: matrix.os == 'macOS-latest'
         run: |
           mkdir artifacts
           mv dist_electron/*.dmg artifacts || true
-      - name: Cleanup artifacts Windows
+      - name: Cleanup Artifacts (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           mkdir artifacts
