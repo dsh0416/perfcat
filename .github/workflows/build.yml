@@ -54,10 +54,10 @@ jobs:
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
         run: |
-          export FRIDA=$(pwd)
           mv ../tsconfig.json ../tsconfig.json.muted
           make -j $(nproc) node-linux-x86_64 NODE=$(which node)
           mv ../tsconfig.json.muted ../tsconfig.json
+          export FRIDA=$(pwd)
           cd frida-node
           npm run prebuild -- -t 13.3.0 -r electron
       - name: Build Frida (macOS)
@@ -68,10 +68,10 @@ jobs:
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
         run: |
-          export FRIDA=$(pwd)
           mv ../tsconfig.json ../tsconfig.json.muted
           make -j $(nproc) node-macos NODE=$(which node)
           mv ../tsconfig.json.muted ../tsconfig.json
+          export FRIDA=$(pwd)
           cd frida-node
           npm run prebuild -- -t 13.3.0 -r electron
       - name: Yarn
