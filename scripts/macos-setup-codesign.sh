@@ -2,6 +2,8 @@
 
 # This script is copied from https://github.com/llvm/llvm-project/blob/main/lldb/scripts/macos-setup-codesign.sh
 
+TMP=$TMP
+[[ -z "$TMP" ]] && TMP="/tmp"
 CERT="frida-cert"
 
 function error() {
@@ -11,7 +13,7 @@ function error() {
 
 function cleanup {
     # Remove generated files
-    rm -f "$TMPDIR/$CERT.tmpl" "$TMPDIR/$CERT.cer" "$TMPDIR/$CERT.key" > /dev/null 2>&1
+    rm -f "$TMP/$CERT.tmpl" "$TMP/$CERT.cer" "$TMP/$CERT.key" > /dev/null 2>&1
 }
 
 trap cleanup EXIT
@@ -24,7 +26,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # Create the certificate template
-cat <<EOF >$TMPDIR/$CERT.tmpl
+cat <<EOF >$TMP/$CERT.tmpl
 [ req ]
 default_bits       = 2048        # RSA key size
 encrypt_key        = no          # Protect private key
@@ -39,15 +41,15 @@ extendedKeyUsage   = critical,codeSigning
 EOF
 
 # Generate a new certificate
-openssl req -new -newkey rsa:2048 -x509 -days 3650 -nodes -config "$TMPDIR/$CERT.tmpl" -extensions codesign_reqext -batch -out "$TMPDIR/$CERT.cer" -keyout "$TMPDIR/$CERT.key" > /dev/null 2>&1
+openssl req -new -newkey rsa:2048 -x509 -days 3650 -nodes -config "$TMP/$CERT.tmpl" -extensions codesign_reqext -batch -out "$TMP/$CERT.cer" -keyout "$TMP/$CERT.key" > /dev/null 2>&1
 [ $? -eq 0 ] || error Something went wrong when generating the certificate
 
 # Install the certificate in the system keychain
-sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$TMPDIR/$CERT.cer" > /dev/null 2>&1
+sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$TMP/$CERT.cer" > /dev/null 2>&1
 [ $? -eq 0 ] || error Something went wrong when installing the certificate
 
 # Install the key for the certificate in the system keychain
-sudo security import "$TMPDIR/$CERT.key" -A -k /Library/Keychains/System.keychain > /dev/null 2>&1
+sudo security import "$TMP/$CERT.key" -A -k /Library/Keychains/System.keychain > /dev/null 2>&1
 [ $? -eq 0 ] || error Something went wrong when installing the key
 
 # Kill task_for_pid access control daemon
