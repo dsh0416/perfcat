@@ -35,7 +35,7 @@ jobs:
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
         run: |
-          cd frida/frida-node
+          cd frida
           yarn global add add node-gyp
           yarn global add prebuild
           make node-linux-x86_64 NODE=$(which node)
