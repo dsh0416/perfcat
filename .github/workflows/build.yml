@@ -24,6 +24,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - name: Create Certificate (macOS)
+        if: matrix.os == 'macos-latest'
+        env:
+          DIR: ${{ runner.temp }}
+        run: |
+          ./scripts/macos-setup-codesign-action.sh
       - name: Checkout Frida v15.1.17
         run: |
           git clone --recursive https://github.com/frida/frida.git ../frida
@@ -52,12 +58,6 @@ jobs:
       - name: Install Python Global Deps
         run: |
           pip install colorama prompt-toolkit pygments
-      - name: Create Certificate (macOS)
-        if: matrix.os == 'macos-latest'
-        env:
-          RUNNER_TEMP: ${{ runner.temp }}
-        run: |
-          sudo ./scripts/macos-setup-codesign-action.sh
       - name: Build Frida (Linux)
         if: matrix.os == 'ubuntu-latest'
         working-directory: ../frida
