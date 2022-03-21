@@ -42,9 +42,9 @@ security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
 security unlock-keychain -p "KEYCHAIN_PASSWORD_EXAMPLE" $KEYCHAIN_PATH
 
 # Install the certificate in the system keychain
-security add-trusted-cert -r trustRoot -p codeSign -k $KEYCHAIN_PATH "$DIR/$CERT.cer" > /dev/null 2>&1
-security import "$DIR/$CERT.key" -A -k $KEYCHAIN_PATH > /dev/null 2>&1
-security list-keychain -d system -s $KEYCHAIN_PATH
+sudo security add-trusted-cert -r trustRoot -p codeSign -k $KEYCHAIN_PATH "$DIR/$CERT.cer" > /dev/null 2>&1
+sudo security import "$DIR/$CERT.key" -A -k $KEYCHAIN_PATH > /dev/null 2>&1
+sudo security list-keychain -d system -s $KEYCHAIN_PATH
 
 # Exit indicating the certificate is now generated and installed
 exit 0
