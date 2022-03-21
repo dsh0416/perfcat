@@ -38,11 +38,11 @@ jobs:
           yarn global add electron-builder
       - name: Build Frida (Linux)
         if: matrix.os == 'ubuntu-latest'
+        working-directory: ./frida
         env:
           npm_config_runtime: electron
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
-          working-directory: ./frida
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-multilib g++-multilib
