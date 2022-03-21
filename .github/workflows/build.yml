@@ -55,7 +55,7 @@ jobs:
       - name: Create Certificate (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          ./scripts/macos-setup-codesign.sh
+          sudo ./scripts/macos-setup-codesign.sh
       - name: Build Frida (Linux)
         if: matrix.os == 'ubuntu-latest'
         working-directory: ../frida

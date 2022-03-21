@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is copied from https://github.com/llvm/llvm-project/blob/master/lldb/scripts/macos-setup-codesign.sh
+# This script is copied from https://github.com/llvm/llvm-project/blob/main/lldb/scripts/macos-setup-codesign.sh
 
 CERT="frida-cert"
 
