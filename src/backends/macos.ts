@@ -14,8 +14,8 @@ export class MacOsBackend implements IBackend {
 }
 
 export class MacOsDevice implements IDevice {
-  public name = "Native";
-  public value = "native";
+  public name = "Local";
+  public value = "local";
 
   public getCpuUsage(): Promise<number> {
     return new Promise<number>((resolve) => {

@@ -1,4 +1,7 @@
-export const generateFrameChart = (frames: [number[], number[]]) => {
+export const generateJankChart = (
+  janks: [number[], number[]],
+  bigJanks: [number[], number[]]
+) => {
   return {
     title: {
       text: "Jank Statistics",
@@ -37,12 +40,12 @@ export const generateFrameChart = (frames: [number[], number[]]) => {
       {
         name: "Jank",
         type: "line",
-        data: frames,
+        data: janks,
       },
       {
         name: "Big Jank",
         type: "line",
-        data: frames,
+        data: bigJanks,
       },
     ],
   };

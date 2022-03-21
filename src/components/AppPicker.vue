@@ -15,9 +15,9 @@
     el-form-item(:label="t('el.perfcat.surface')")
       el-select(:placeholder="t('el.perfcat.surface')")
     el-form-item(:label="t('el.perfcat.targetFps')")
-      el-input-number.fix-height(:min="1" :max="300" :step="1" v-model="form.targetFps")
+      el-input-number.fix-height(:min="1" :max="300" :step="1" v-model="target.targetFps")
     el-form-item(:label="t('el.perfcat.actions')")
-      el-button(type="primary")
+      el-button(type="primary", @click="onSubmit")
         | {{ t("el.perfcat.submit") }}
       el-button(type="danger")
         | {{ t("el.perfcat.record") }}
@@ -33,10 +33,23 @@ import type {
   IDevice,
   ISurface,
 } from "@/backends/ibackend";
+
 import { MacOsBackend } from "@/backends/macos";
+import { useMonitorStore } from "@/stores/monitor";
+import type { MonitorTarget } from "@/stores/monitor";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const { t } = useI18n();
+/* eslint-enable */
+
+const monitor = useMonitorStore();
+const target = reactive<MonitorTarget>({
+  backend: null,
+  device: null,
+  application: null,
+  surface: null,
+  targetFps: 60,
+});
 
 const candidates = reactive({
   backends: [] as IBackend[],
@@ -50,32 +63,42 @@ const form = reactive({
   device: "",
   application: "",
   window: "",
-  targetFps: 60,
 });
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const onFormChange = async () => {
-  const backend = candidates.backends.filter(
+  target.backend = candidates.backends.filter(
     (a) => a.value === form.backend
   )[0];
-  if (backend == null) {
+  if (target.backend.value == null) {
     return;
   }
 
-  candidates.devices = await backend.getDevices();
-  const device = candidates.devices.filter((a) => a.value == form.device)[0];
-  if (device == null) {
+  candidates.devices = await target.backend.getDevices();
+  target.device = candidates.devices.filter((a) => a.value == form.device)[0];
+  if (target.device == null) {
     return;
   }
 
-  candidates.applications = await device.getApplications();
-  const application = candidates.applications.filter(
+  candidates.applications = await target.device.getApplications();
+  target.application = candidates.applications.filter(
     (a) => a.value == form.application
   )[0];
-  if (application == null) {
+  if (target.application == null) {
     return;
   }
 
-  candidates.surfaces = await application.getSurfaces();
+  candidates.surfaces = await target.application.getSurfaces();
+};
+
+const onSubmit = () => {
+  monitor.submit({
+    backend: target.backend,
+    device: target.device,
+    application: target.application,
+    surface: target.surface,
+    targetFps: target.targetFps,
+  });
 };
 /* eslint-enable */
 

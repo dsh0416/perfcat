@@ -9,6 +9,8 @@ export const generateFrameChart = (frames: [number[], number[]]) => {
     },
     yAxis: {
       type: "value",
+      min: 0,
+      max: 60,
     },
     tooltip: {
       trigger: "axis",
