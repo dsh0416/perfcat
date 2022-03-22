@@ -61,6 +61,14 @@ jobs:
           npm_config_disturl: https://electronjs.org/headers
         run: |
           yarn global add node-gyp prebuild electron-builder
+      - name: Install Node Global Deps (Windows)
+        if: matrix.os == 'windows-latest'
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+        run: |
+          yarn global add windows-build-tools
       - name: Install Python Global Deps
         run: |
           pip install colorama prompt-toolkit pygments
