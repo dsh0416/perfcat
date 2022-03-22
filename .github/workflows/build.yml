@@ -84,6 +84,15 @@ jobs:
           MACOS_CERTID: frida-cert
         run: |
           make node-macos NODE=$(which node)
+      - name: Build Frida (Windows)
+        if: matrix.os == 'windows-2019'
+        working-directory: ../frida
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+        run: |
+          MSBuild frida.sln /t:BuildAll /p:Configuration:Release /p:Platform=x64
       - name: Build Frida Node (*NIX)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         working-directory: ../frida/frida-node
