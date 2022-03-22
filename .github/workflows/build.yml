@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
 
     steps:
       - name: Echo Context
@@ -61,7 +61,7 @@ jobs:
           npm_config_disturl: https://electronjs.org/headers
         run: |
           yarn global add node-gyp prebuild electron-builder
-          npm config set msvs_version 2022 --global
+          npm config set msvs_version 2019 --global
       - name: Install Python Global Deps
         run: |
           pip install colorama prompt-toolkit pygments
