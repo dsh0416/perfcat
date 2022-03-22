@@ -52,7 +52,7 @@ jobs:
         run: |
           ./scripts/macos-setup-codesign-action.sh
       - name: Setup Visual Studio
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
         uses: microsoft/setup-msbuild@v1.1
       - name: Install Node Global Deps
         env:
@@ -98,7 +98,7 @@ jobs:
           npm run prebuild -- -t 13.3.0 -r electron
           ln -s $(pwd)/../ ../../perfcat/frida
       - name: Build Frida Node (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
         working-directory: ../frida/frida-node
         env:
           npm_config_runtime: electron
@@ -132,7 +132,7 @@ jobs:
           mkdir artifacts
           mv dist_electron/*.dmg artifacts || true
       - name: Cleanup Artifacts (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
         run: |
           mkdir artifacts
           mv dist_electron/*.exe artifacts
