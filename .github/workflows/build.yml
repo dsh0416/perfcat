@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:    
+      - main
 
 jobs:
   build:
@@ -13,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
 
     steps:
       - name: Echo Context
@@ -24,12 +27,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - name: Create Certificate (macOS)
-        if: matrix.os == 'macos-latest'
-        env:
-          DIR: ${{ runner.temp }}
-        run: |
-          ./scripts/macos-setup-codesign-action.sh
       - name: Checkout Frida v15.1.17
         run: |
           git clone --recursive https://github.com/frida/frida.git ../frida
@@ -48,6 +45,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential lib32stdc++-9-dev libc6-dev-i386
+      - name: Create Certificate (macOS)
+        if: matrix.os == 'macos-latest'
+        env:
+          DIR: ${{ runner.temp }}
+        run: |
+          ./scripts/macos-setup-codesign-action.sh
+      - name: Setup Visual Studio
+        if: matrix.os == 'windows-2019'
+        uses: microsoft/setup-msbuild@v1.1
       - name: Install Node Global Deps
         env:
           npm_config_runtime: electron
@@ -55,6 +61,7 @@ jobs:
           npm_config_disturl: https://electronjs.org/headers
         run: |
           yarn global add node-gyp prebuild electron-builder
+          npm config set msvs_version 2019 --global
       - name: Install Python Global Deps
         run: |
           pip install colorama prompt-toolkit pygments
@@ -77,6 +84,20 @@ jobs:
           MACOS_CERTID: frida-cert
         run: |
           make node-macos NODE=$(which node)
+      - name: Build Frida (Windows)
+        if: matrix.os == 'windows-2019'
+        working-directory: ../frida
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+        run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted
+          pwsh .\releng\stage-python.ps1
+          cmd.exe /c "ASSOC .py=Python.exe"
+          New-Item build\tmp-windows -ItemType Directory -ea 0
+          python .\releng\generate-version-header.py build\tmp-windows\frida-version.h
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64
       - name: Build Frida Node (*NIX)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         working-directory: ../frida/frida-node
@@ -90,6 +111,18 @@ jobs:
           npm install
           npm run prebuild -- -t 13.3.0 -r electron
           ln -s $(pwd)/../ ../../perfcat/frida
+      - name: Build Frida Node (Windows)
+        if: matrix.os == 'windows-2019'
+        working-directory: ../frida/frida-node
+        env:
+          npm_config_runtime: electron
+          npm_config_target: 13.3.0
+          npm_config_disturl: https://electronjs.org/headers
+        run: |
+          $env:FRIDA="${pwd}\..\"
+          npm install
+          npm run prebuild -- -t 13.3.0 -r electron
+          New-Item -ItemType Junction -Path "..\..\perfcat\frida" -Target "${pwd}\..\"
       - name: Yarn
         env:
           npm_config_runtime: electron
@@ -113,7 +146,7 @@ jobs:
           mkdir artifacts
           mv dist_electron/*.dmg artifacts || true
       - name: Cleanup Artifacts (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
         run: |
           mkdir artifacts
           mv dist_electron/*.exe artifacts
