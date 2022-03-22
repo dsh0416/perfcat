@@ -84,7 +84,7 @@ jobs:
           MACOS_CERTID: frida-cert
         run: |
           make node-macos NODE=$(which node)
-      - name: Build Frida (Windows)
+      - name: Build Frida Core (Windows)
         if: matrix.os == 'windows-2019'
         working-directory: ../frida
         env:
@@ -93,11 +93,10 @@ jobs:
           npm_config_disturl: https://electronjs.org/headers
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted
-          python .\releng\generate-version-header.py build\tmp-windows\frida-version.h
           pwsh .\releng\stage-python.ps1
           New-Item build\tmp-windows -ItemType Directory -ea 0
           python .\releng\generate-version-header.py build\tmp-windows\frida-version.h
-          msbuild frida.sln /p:Configuration=Release /p:Platform=x64
+          msbuild frida.sln -target:frida-core:Build /p:Configuration=Release /p:Platform=x64
       - name: Build Frida Node (*NIX)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         working-directory: ../frida/frida-node
