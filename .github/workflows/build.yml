@@ -92,7 +92,12 @@ jobs:
           npm_config_target: 13.3.0
           npm_config_disturl: https://electronjs.org/headers
         run: |
-          MSBuild frida.sln /t:BuildAll /p:Configuration:Release /p:Platform=x64
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted
+          python .\releng\generate-version-header.py build\tmp-windows\frida-version.h
+          pwsh .\releng\stage-python.ps1
+          New-Item build\tmp-windows -ItemType Directory -ea 0
+          python .\releng\generate-version-header.py build\tmp-windows\frida-version.h
+          msbuild frida.sln /p:Configuration=Release /p:Platform=x64
       - name: Build Frida Node (*NIX)
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         working-directory: ../frida/frida-node
