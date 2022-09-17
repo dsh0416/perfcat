@@ -17,7 +17,7 @@ bool EXPORTS_API process_create(const char* work_dir, const char* args[],
     args_vec.push_back(args[i]);
   }
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_M_X64)
   perfcat::IProcess* p = new perfcat::ProcessWin64(work_dir, args_vec);
 #else
   return false;
@@ -32,7 +32,7 @@ bool EXPORTS_API process_start(void* process) {
     return false;
   }
 
-  perfcat::IProcess* p = (perfcat::IProcess*)process;
+  perfcat::IProcess* p = reinterpret_cast<perfcat::IProcess*>(process);
   return p->start();
 }
 
@@ -41,7 +41,7 @@ bool EXPORTS_API process_kill(void* process) {
     return false;
   }
 
-  perfcat::IProcess* p = (perfcat::IProcess*)process;
+  perfcat::IProcess* p = reinterpret_cast<perfcat::IProcess*>(process);
   return p->kill();
 }
 
@@ -50,7 +50,7 @@ bool EXPORTS_API process_is_running(void* process) {
     return false;
   }
 
-  perfcat::IProcess* p = (perfcat::IProcess*)process;
+  perfcat::IProcess* p = reinterpret_cast<perfcat::IProcess*>(process);
   return p->is_running();
 }
 
@@ -59,7 +59,7 @@ bool EXPORTS_API process_destroy(void* process) {
     return false;
   }
 
-  perfcat::IProcess* p = (perfcat::IProcess*)process;
+  perfcat::IProcess* p = reinterpret_cast<perfcat::IProcess*>(process);
   delete p;
   return true;
 }
