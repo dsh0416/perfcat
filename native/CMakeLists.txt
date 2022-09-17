@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PERFCAT_SOURCE_FILES
   pch.hpp
+  injector/installer/installer.hpp
   injector/process/process.hpp
   injector/process/process_win64.hpp
   injector/process/process_win64.cpp

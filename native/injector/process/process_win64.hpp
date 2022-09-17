@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pch.hpp"
 
 #include "process.hpp"
