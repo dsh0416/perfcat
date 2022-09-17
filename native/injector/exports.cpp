@@ -3,7 +3,11 @@
 #include "injector/process/process.hpp"
 #include "injector/process/process_Win.hpp"
 
-#define EXPORTS_API __declspec(dllexport) __stdcall
+#ifdef _WIN32
+#define EXPORTS_API __declspec(dllexport) __cdecl
+#else
+#define EXPORTS_API
+#endif
 
 extern "C" {
 bool EXPORTS_API process_create(const char* work_dir, const char* args[],
