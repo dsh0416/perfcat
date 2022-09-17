@@ -1,10 +1,10 @@
 #include "pch.hpp"
 
-#include "process_win64.hpp"
+#include "process_win.hpp"
 
 #ifdef _WIN32
 namespace perfcat {
-bool ProcessWin64::start() {
+bool ProcessWin::start() {
   STARTUPINFOA startup_info = {0};
   startup_info.cb = sizeof(startup_info);
 
@@ -18,7 +18,7 @@ bool ProcessWin64::start() {
   return true;
 }
 
-bool ProcessWin64::kill() {
+bool ProcessWin::kill() {
   if (!started_) {
     return false;
   }
@@ -31,7 +31,7 @@ bool ProcessWin64::kill() {
   return true;
 }
 
-bool ProcessWin64::is_running() {
+bool ProcessWin::is_running() {
   if (!started_) {
     return false;
   }
@@ -49,7 +49,7 @@ bool ProcessWin64::is_running() {
   return false;
 }
 
-std::string ProcessWin64::cmdline() const {
+std::string ProcessWin::cmdline() const {
   // Reference:
   // https://docs.microsoft.com/zh-cn/archive/blogs/twistylittlepassagesallalike/everyone-quotes-command-line-arguments-the-wrong-way
   // https://docs.microsoft.com/zh-cn/windows/desktop/api/shellapi/nf-shellapi-commandlinetoargvw

@@ -1,7 +1,7 @@
 #include "pch.hpp"
 
 #include "injector/process/process.hpp"
-#include "injector/process/process_win64.hpp"
+#include "injector/process/process_Win.hpp"
 
 #define EXPORTS_API __declspec(dllexport) __stdcall
 
@@ -17,8 +17,8 @@ bool EXPORTS_API process_create(const char* work_dir, const char* args[],
     args_vec.push_back(args[i]);
   }
 
-#if defined(_WIN32) && defined(_M_X64)
-  perfcat::IProcess* p = new perfcat::ProcessWin64(work_dir, args_vec);
+#ifdef _WIN32
+  perfcat::IProcess* p = new perfcat::ProcessWin(work_dir, args_vec);
 #else
   return false;
 #endif

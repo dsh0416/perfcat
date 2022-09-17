@@ -6,10 +6,10 @@
 
 #ifdef _WIN32
 namespace perfcat {
-class ProcessWin64 : public IProcess {
+class ProcessWin : public IProcess {
 public:
   using IProcess::IProcess;
-  ~ProcessWin64() = default;
+  ~ProcessWin() = default;
 
 public:
   bool start() override;

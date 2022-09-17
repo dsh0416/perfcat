@@ -10,8 +10,8 @@ set(PERFCAT_SOURCE_FILES
   injector/exports.cpp
   injector/installer/installer.hpp
   injector/process/process.hpp
-  injector/process/process_win64.cpp
-  injector/process/process_win64.hpp
+  injector/process/process_win.cpp
+  injector/process/process_win.hpp
 )
 
 add_library(perfcat_native SHARED ${PERFCAT_SOURCE_FILES})
