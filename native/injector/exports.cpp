@@ -5,8 +5,6 @@
 
 #define EXPORTS_API __declspec(dllexport) __stdcall
 
-// Assuming Win64 only
-
 extern "C" {
 bool EXPORTS_API process_create(const char* work_dir, const char* args[],
                                 int args_len, void** process) {
@@ -19,7 +17,12 @@ bool EXPORTS_API process_create(const char* work_dir, const char* args[],
     args_vec.push_back(args[i]);
   }
 
+#ifdef _WIN32
   perfcat::IProcess* p = new perfcat::ProcessWin64(work_dir, args_vec);
+#else
+  return false;
+#endif
+
   *process = p;
   return true;
 }
