@@ -8,7 +8,7 @@ bool ProcessWin64::start() {
   STARTUPINFOA startup_info = {0};
   startup_info.cb = sizeof(startup_info);
 
-  if (!CreateProcessA(NULL, cmdline().c_str(), NULL, NULL, FALSE,
+  if (!CreateProcessA(NULL, ((LPSTR)cmdline().c_str()), NULL, NULL, FALSE,
                       CREATE_SUSPENDED, NULL, work_dir_.c_str(), &startup_info,
                       &process_info_)) {
     return false;
@@ -62,8 +62,8 @@ std::string ProcessWin64::cmdline() const {
   }
 
   // remove trailing space
-  result.pop_back();
-  return result;
+  ret.pop_back();
+  return ret;
 }
 } // namespace perfcat
 #endif

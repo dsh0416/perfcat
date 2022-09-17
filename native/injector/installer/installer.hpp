@@ -3,11 +3,11 @@
 #include "process/process.hpp"
 
 namespace perfcat {
-class IInjector {
+class IInstaller {
 public:
-  IInjector(IProcess& process, const std::vector<std::uint8_t> library)
+  IInstaller(IProcess& process, const std::vector<std::uint8_t> library)
       : library_(library){};
-  virtual ~IInjector() = default;
+  virtual ~IInstaller() = default;
   virtual bool install(const std::vector<uint8_t>& args);
 
 protected:

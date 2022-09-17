@@ -1,4 +1,5 @@
 {
+  "cmake.sourceDirectory": "${workspaceFolder}/native",
   "cSpell.words": [
     "perfcat"
   ],

@@ -4,7 +4,7 @@ namespace perfcat {
 class IProcess {
 public:
   IProcess(const std::string work_dir,
-           const std::vector<const std::string> args)
+           const std::vector<std::string> args)
       : work_dir_(work_dir), args_(args){};
   virtual ~IProcess() = default;
 
@@ -15,7 +15,7 @@ public:
 
 protected:
   const std::string work_dir_;
-  const std::vector<const std::string> args_;
+  const std::vector<std::string> args_;
 
 protected:
   bool started_ = false;
