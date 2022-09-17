@@ -11,9 +11,9 @@ public:
   virtual ~IProcess() = default;
 
 public:
-  virtual bool start();
-  virtual bool kill();
-  virtual bool is_running();
+  virtual bool start() { return false; };
+  virtual bool kill() { return false; };
+  virtual bool is_running() { return false; };
 
 protected:
   const std::string work_dir_;

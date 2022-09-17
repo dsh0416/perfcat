@@ -12,9 +12,9 @@ public:
   ~ProcessWin64() = default;
 
 public:
-  bool start();
-  bool kill();
-  bool is_running();
+  bool start() override;
+  bool kill() override;
+  bool is_running() override;
 
 private:
   std::string cmdline() const;

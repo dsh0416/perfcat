@@ -18,6 +18,37 @@ bool ProcessWin64::start() {
   return true;
 }
 
+bool ProcessWin64::kill() {
+  if (!started_) {
+    return false;
+  }
+
+  if (!TerminateProcess(process_info_.hProcess, 0)) {
+    return false;
+  }
+
+  started_ = false;
+  return true;
+}
+
+bool ProcessWin64::is_running() {
+  if (!started_) {
+    return false;
+  }
+
+  DWORD exit_code;
+  if (!GetExitCodeProcess(process_info_.hProcess, &exit_code)) {
+    return false;
+  }
+
+  if (exit_code == STILL_ACTIVE) {
+    return true;
+  }
+
+  started_ = false;
+  return false;
+}
+
 std::string ProcessWin64::cmdline() const {
   // Reference:
   // https://docs.microsoft.com/zh-cn/archive/blogs/twistylittlepassagesallalike/everyone-quotes-command-line-arguments-the-wrong-way
