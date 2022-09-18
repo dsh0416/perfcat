@@ -25,7 +25,7 @@ include_directories(${OPENSSL_INCLUDE_DIRS})
 target_link_libraries(perfcat_hook PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 
 # curl
-find_package(CURL CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIR})
 target_link_libraries(perfcat_hook PRIVATE CURL::libcurl)
 
