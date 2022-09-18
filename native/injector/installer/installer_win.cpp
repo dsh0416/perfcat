@@ -68,11 +68,7 @@ bool InstallerWin::is_x64() const {
   }
 
   BOOL wow64 = FALSE;
-  if (!fnIsWow64Process(hProcess, &wow64)) {
-    CloseHandle(hProcess);
-    return false;
-  }
-
+  fnIsWow64Process(hProcess, &wow64);
   CloseHandle(hProcess);
   return !wow64;
 }
