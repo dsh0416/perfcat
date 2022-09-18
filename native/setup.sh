@@ -7,7 +7,7 @@ if [[ "$OSTYPE" == "msys" ]]; then
   ./vcpkg/vcpkg install curl openssl
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
   git clone https://github.com/microsoft/vcpkg
-  ./vcpkg/bootstrap-vcpkg.bat
+  ./vcpkg/bootstrap-vcpkg.sh
   ./vcpkg/vcpkg install curl openssl
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   brew install curl openssl
