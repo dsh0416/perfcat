@@ -3,7 +3,7 @@
 #include "installer_win.hpp"
 
 #ifdef _WIN32
-namespace perfcat {
+namespace perfcat::injector {
 typedef BOOL(WINAPI* LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
 
 bool InstallerWin::install(perfcat_hook_init_t& args) {
@@ -34,13 +34,14 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
                          remote_library_path, 0, nullptr);
 
   WaitForSingleObject(remote_thread_load_library, INFINITE);
-
   VirtualFreeEx(process_handle, remote_library_path, library_path_bytesize,
                 MEM_RELEASE);
 
   // perfcat_hook_init
+  args.wake_up_tid = process_info.dwThreadId; // Setup wake up thread id
   auto remote_args = VirtualAllocEx(process_handle, nullptr, sizeof(args),
                                     MEM_COMMIT, PAGE_READWRITE);
+  WriteProcessMemory(process_handle, remote_args, &args, sizeof(args), nullptr);
   auto remote_thread_perfcat_init = CreateRemoteThread(
       process_handle, nullptr, 0,
       reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(
@@ -48,10 +49,6 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
       remote_args, 0, nullptr);
 
   WaitForSingleObject(remote_thread_perfcat_init, INFINITE);
-
-  WriteProcessMemory(process_handle, remote_args, &args, sizeof(args),
-                     nullptr);
-
   VirtualFreeEx(process_handle, remote_args, sizeof(args), MEM_RELEASE);
   return true;
 }
@@ -79,5 +76,5 @@ bool InstallerWin::is_x64() const {
   CloseHandle(hProcess);
   return !wow64;
 }
-} // namespace perfcat
+} // namespace perfcat::injector
 #endif

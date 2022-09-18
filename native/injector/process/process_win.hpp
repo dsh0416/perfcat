@@ -5,7 +5,7 @@
 #include "process.hpp"
 
 #ifdef _WIN32
-namespace perfcat {
+namespace perfcat::injector {
 class ProcessWin : public IProcess {
 public:
   using IProcess::IProcess;
@@ -25,5 +25,5 @@ private:
 private:
   PROCESS_INFORMATION process_info_{nullptr};
 };
-} // namespace perfcat
+} // namespace perfcat::injector
 #endif

@@ -3,7 +3,7 @@
 #include "process_win.hpp"
 
 #ifdef _WIN32
-namespace perfcat {
+namespace perfcat::injector {
 ProcessWin::~ProcessWin() {
   if (started_) {
     kill();
@@ -110,5 +110,5 @@ std::string ProcessWin::cmdline() const {
   ret.pop_back();
   return ret;
 }
-} // namespace perfcat
+} // namespace perfcat::injector
 #endif

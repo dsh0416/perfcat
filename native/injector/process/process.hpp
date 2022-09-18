@@ -2,11 +2,10 @@
 
 #include "pch.hpp"
 
-namespace perfcat {
+namespace perfcat::injector {
 class IProcess {
 public:
-  IProcess(const std::string work_dir,
-           const std::vector<std::string> args)
+  IProcess(const std::string work_dir, const std::vector<std::string> args)
       : work_dir_(work_dir), args_(args){};
   virtual ~IProcess() = default;
 
@@ -22,4 +21,4 @@ protected:
 protected:
   bool started_ = false;
 };
-} // namespace perfcat
+} // namespace perfcat::injector

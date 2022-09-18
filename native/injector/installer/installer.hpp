@@ -4,11 +4,11 @@
 
 #include "process/process.hpp"
 
-namespace perfcat {
+namespace perfcat::injector {
 class IInstaller {
 public:
   IInstaller(IProcess& process){};
   virtual ~IInstaller() = default;
   virtual bool install(perfcat_hook_init_t& args) { return false; };
 };
-} // namespace perfcat
+} // namespace perfcat::injector

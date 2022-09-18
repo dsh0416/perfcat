@@ -21,8 +21,6 @@
 #endif
 
 struct perfcat_hook_init_args {
-  const char* work_dir;
-  const char* args[32];
-  int args_len;
+  uint64_t wake_up_tid;
 };
 using perfcat_hook_init_t = struct perfcat_hook_init_args;

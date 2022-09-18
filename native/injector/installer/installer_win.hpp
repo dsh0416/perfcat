@@ -7,7 +7,7 @@
 #include "process/process_win.hpp"
 
 #ifdef _WIN32
-namespace perfcat {
+namespace perfcat::injector {
 class InstallerWin : public IInstaller {
 public:
   InstallerWin(ProcessWin& process) : process_(process), IInstaller(process){};
@@ -19,5 +19,5 @@ private:
 private:
   ProcessWin& process_;
 };
-} // namespace perfcat
+} // namespace perfcat::injector
 #endif
