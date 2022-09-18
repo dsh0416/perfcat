@@ -62,11 +62,10 @@ bool EXPORTS_API perfcat_process_create(const char* work_dir,
 #ifdef _WIN32
   perfcat::injector::IProcess* p =
       new perfcat::injector::ProcessWin(work_dir, args_vec);
+  *process = p;
 #else
   return false;
 #endif
-
-  *process = p;
   return true;
 }
 
