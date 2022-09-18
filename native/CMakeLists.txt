@@ -5,17 +5,5 @@ project(perfcat_native)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(PERFCAT_SOURCE_FILES
-  pch.hpp
-  injector/exports.cpp
-  injector/installer/installer.hpp
-  injector/installer/installer_win.cpp
-  injector/installer/installer_win.hpp
-  injector/process/process.hpp
-  injector/process/process_win.cpp
-  injector/process/process_win.hpp
-)
-
-add_library(perfcat_native SHARED ${PERFCAT_SOURCE_FILES})
-
-target_include_directories(perfcat_native PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(hook)
+add_subdirectory(injector)

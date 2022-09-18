@@ -4,7 +4,7 @@
 
 #include "installer.hpp"
 
-#include "injector/process/process_win.hpp"
+#include "process/process_win.hpp"
 
 #ifdef _WIN32
 namespace perfcat {

@@ -2,7 +2,7 @@
 
 #include "pch.hpp"
 
-#include "injector/process/process.hpp"
+#include "process/process.hpp"
 
 namespace perfcat {
 class IInstaller {

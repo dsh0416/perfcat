@@ -13,40 +13,47 @@ bool InstallerWin::install(std::vector<uint8_t>& args) {
 
   auto process_info = process_.get_process_info();
   auto process_handle = process_info.hProcess;
-  auto thread_handle = process_info.hThread;
 
+  // LoadLibraryA
   auto is_x64 = this->is_x64();
-  std::string library_path = is_x64 ? "perfcat_hook.dll" : "perfcat_hook_x86.dll";
-
+  std::string library_path =
+      is_x64 ? "perfcat_hook.dll" : "perfcat_hook_x86.dll";
   auto library_path_bytesize = library_path.size() * sizeof(std::uint8_t) + 1;
-  auto args_len_bytes = args.size() * sizeof(uint8_t);
 
-  auto remote_library_path = VirtualAllocEx(
-      process_handle, nullptr, library_path_bytesize, MEM_COMMIT, PAGE_READWRITE);
-  auto remote_args = VirtualAllocEx(process_handle, nullptr, args_len_bytes,
-                                    MEM_COMMIT, PAGE_READWRITE);
-
+  auto remote_library_path =
+      VirtualAllocEx(process_handle, nullptr, library_path_bytesize, MEM_COMMIT,
+                     PAGE_READWRITE);
   WriteProcessMemory(process_handle, remote_library_path, library_path.c_str(),
                      library_path_bytesize, nullptr);
-  WriteProcessMemory(process_handle, remote_args, args.data(), args_len_bytes,
-                    nullptr);
 
   auto load_library =
       GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
-  auto remote_thread =
+  auto remote_thread_load_library =
       CreateRemoteThread(process_handle, nullptr, 0,
                          reinterpret_cast<LPTHREAD_START_ROUTINE>(load_library),
                          remote_library_path, 0, nullptr);
 
-  WaitForSingleObject(remote_thread, INFINITE);
+  WaitForSingleObject(remote_thread_load_library, INFINITE);
 
   VirtualFreeEx(process_handle, remote_library_path, library_path_bytesize,
                 MEM_RELEASE);
+
+  // perfcat_hook_init
+  auto args_len_bytes = args.size() * sizeof(uint8_t);
+  auto remote_args = VirtualAllocEx(process_handle, nullptr, args_len_bytes,
+                                    MEM_COMMIT, PAGE_READWRITE);
+  auto remote_thread_perfcat_init = CreateRemoteThread(
+      process_handle, nullptr, 0,
+      reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(
+          GetModuleHandleA(library_path.c_str()), "perfcat_hook_init")),
+      remote_args, 0, nullptr);
+
+  WaitForSingleObject(remote_thread_perfcat_init, INFINITE);
+
+  WriteProcessMemory(process_handle, remote_args, args.data(), args_len_bytes,
+                     nullptr);
+
   VirtualFreeEx(process_handle, remote_args, args_len_bytes, MEM_RELEASE);
-
-  CloseHandle(process_handle);
-  CloseHandle(thread_handle);
-
   return true;
 }
 

@@ -1,9 +1,9 @@
 #include "pch.hpp"
 
-#include "injector/installer/installer.hpp"
-#include "injector/installer/installer_win.hpp"
-#include "injector/process/process.hpp"
-#include "injector/process/process_win.hpp"
+#include "installer/installer.hpp"
+#include "installer/installer_win.hpp"
+#include "process/process.hpp"
+#include "process/process_win.hpp"
 
 #ifdef _WIN32
 #define EXPORTS_API __declspec(dllexport) __cdecl
@@ -12,7 +12,7 @@
 #endif
 
 extern "C" {
-bool EXPORTS_API installer_create(void* process, void** installer) {
+bool EXPORTS_API perfcat_installer_create(void* process, void** installer) {
   if (!process || !installer) {
     return false;
   }
@@ -27,7 +27,7 @@ bool EXPORTS_API installer_create(void* process, void** installer) {
   return true;
 }
 
-bool EXPORTS_API installer_destroy(void* installer) {
+bool EXPORTS_API perfcat_installer_destroy(void* installer) {
   if (!installer) {
     return false;
   }
@@ -36,7 +36,7 @@ bool EXPORTS_API installer_destroy(void* installer) {
   return true;
 }
 
-bool EXPORTS_API installer_install(void* installer, const uint8_t* args,
+bool EXPORTS_API perfcat_installer_install(void* installer, const uint8_t* args,
                                    size_t args_size) {
   if (!installer || !args || !args_size) {
     return false;
@@ -47,7 +47,7 @@ bool EXPORTS_API installer_install(void* installer, const uint8_t* args,
   return installer_ptr->install(args_vec);
 }
 
-bool EXPORTS_API process_create(const char* work_dir, const char* args[],
+bool EXPORTS_API perfcat_process_create(const char* work_dir, const char* args[],
                                 int args_len, void** process) {
   if (process == nullptr) {
     return false;
@@ -68,7 +68,7 @@ bool EXPORTS_API process_create(const char* work_dir, const char* args[],
   return true;
 }
 
-bool EXPORTS_API process_destroy(void* process) {
+bool EXPORTS_API perfcat_process_destroy(void* process) {
   if (process == nullptr) {
     return false;
   }
@@ -78,7 +78,7 @@ bool EXPORTS_API process_destroy(void* process) {
   return true;
 }
 
-bool EXPORTS_API process_start(void* process) {
+bool EXPORTS_API perfcat_process_start(void* process) {
   if (process == nullptr) {
     return false;
   }
@@ -87,7 +87,7 @@ bool EXPORTS_API process_start(void* process) {
   return p->start();
 }
 
-bool EXPORTS_API process_kill(void* process) {
+bool EXPORTS_API perfcat_process_kill(void* process) {
   if (process == nullptr) {
     return false;
   }
@@ -96,7 +96,7 @@ bool EXPORTS_API process_kill(void* process) {
   return p->kill();
 }
 
-bool EXPORTS_API process_is_running(void* process) {
+bool EXPORTS_API perfcat_process_is_running(void* process) {
   if (process == nullptr) {
     return false;
   }
