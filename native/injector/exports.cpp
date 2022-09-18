@@ -20,11 +20,11 @@ bool EXPORTS_API perfcat_installer_create(void* process, void** installer) {
 #ifdef _WIN32
   auto process_win = reinterpret_cast<perfcat::injector::ProcessWin*>(process);
   auto installer_win = new perfcat::injector::InstallerWin(*process_win);
+  *installer = installer_win;
+  return true;
 #else
   return false;
 #endif
-  *installer = installer_win;
-  return true;
 }
 
 bool EXPORTS_API perfcat_installer_destroy(void* installer) {
@@ -62,11 +62,10 @@ bool EXPORTS_API perfcat_process_create(const char* work_dir,
 #ifdef _WIN32
   perfcat::injector::IProcess* p =
       new perfcat::injector::ProcessWin(work_dir, args_vec);
+  *process = p;
 #else
   return false;
 #endif
-
-  *process = p;
   return true;
 }
 
