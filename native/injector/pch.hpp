@@ -25,4 +25,4 @@ struct perfcat_hook_init_args {
   const char* args[32];
   int args_len;
 };
-using perfcat_hook_init_t = void (*)(struct perfcat_hook_init_args& args);
+using perfcat_hook_init_t = struct perfcat_hook_init_args;

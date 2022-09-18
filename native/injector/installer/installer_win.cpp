@@ -39,8 +39,7 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
                 MEM_RELEASE);
 
   // perfcat_hook_init
-  auto args_len_bytes = sizeof(args);
-  auto remote_args = VirtualAllocEx(process_handle, nullptr, args_len_bytes,
+  auto remote_args = VirtualAllocEx(process_handle, nullptr, sizeof(args),
                                     MEM_COMMIT, PAGE_READWRITE);
   auto remote_thread_perfcat_init = CreateRemoteThread(
       process_handle, nullptr, 0,
@@ -50,10 +49,10 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
 
   WaitForSingleObject(remote_thread_perfcat_init, INFINITE);
 
-  WriteProcessMemory(process_handle, remote_args, ((void*)args),
-                     args_len_bytes, nullptr);
+  WriteProcessMemory(process_handle, remote_args, &args, sizeof(args),
+                     nullptr);
 
-  VirtualFreeEx(process_handle, remote_args, args_len_bytes, MEM_RELEASE);
+  VirtualFreeEx(process_handle, remote_args, sizeof(args), MEM_RELEASE);
   return true;
 }
 
