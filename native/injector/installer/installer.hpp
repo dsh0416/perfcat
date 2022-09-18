@@ -7,12 +7,8 @@
 namespace perfcat {
 class IInstaller {
 public:
-  IInstaller(IProcess& process, const std::vector<std::uint8_t> library)
-      : library_(library){};
+  IInstaller(IProcess& process){};
   virtual ~IInstaller() = default;
-  virtual bool install(const std::vector<uint8_t>& args);
-
-protected:
-  const std::vector<std::uint8_t> library_;
+  virtual bool install(std::vector<uint8_t>& args) { return false; };
 };
 } // namespace perfcat

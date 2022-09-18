@@ -9,12 +9,15 @@ namespace perfcat {
 class ProcessWin : public IProcess {
 public:
   using IProcess::IProcess;
-  ~ProcessWin() = default;
+  ~ProcessWin();
 
 public:
   bool start() override;
   bool kill() override;
   bool is_running() override;
+
+public:
+  PROCESS_INFORMATION& get_process_info() { return process_info_; }
 
 private:
   std::string cmdline() const;

@@ -9,6 +9,8 @@ set(PERFCAT_SOURCE_FILES
   pch.hpp
   injector/exports.cpp
   injector/installer/installer.hpp
+  injector/installer/installer_win.cpp
+  injector/installer/installer_win.hpp
   injector/process/process.hpp
   injector/process/process_win.cpp
   injector/process/process_win.hpp

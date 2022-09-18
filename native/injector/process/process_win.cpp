@@ -4,6 +4,20 @@
 
 #ifdef _WIN32
 namespace perfcat {
+ProcessWin::~ProcessWin() {
+  if (started_) {
+    kill();
+  }
+
+  if (process_info_.hThread) {
+    CloseHandle(process_info_.hThread);
+  }
+
+  if (process_info_.hProcess) {
+    CloseHandle(process_info_.hProcess);
+  }
+}
+
 bool ProcessWin::start() {
   STARTUPINFOA startup_info = {0};
   startup_info.cb = sizeof(startup_info);
