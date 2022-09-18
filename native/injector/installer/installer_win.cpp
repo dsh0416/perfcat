@@ -16,7 +16,8 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
 
   // LoadLibraryA
   std::string library_path =
-      this->is_x64() ? "perfcat_hook.dll" : "perfcat_hook_x86.dll";
+      std::filesystem::current_path().string() +
+      (this->is_x64() ? "perfcat_hook.dll" : "perfcat_hook_x86.dll");
   auto library_path_bytesize = (library_path.size() + 1) * sizeof(std::uint8_t);
 
   auto remote_library_path =
