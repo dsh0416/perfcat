@@ -14,12 +14,9 @@ public:
   bool attach() override;
 
 private:
-  using idxgi_swapchain_present_t = HRESULT(__stdcall*)(IDXGISwapChain*, UINT,
-                                                        UINT);
-  static HRESULT __stdcall idxgiSwapchainPresent(IDXGISwapChain* self,
-                                                 UINT sync_interval,
-                                                 UINT flags);
-  static idxgi_swapchain_present_t present_;
+  static HRESULT __stdcall idxgi_swapchain_present(IDXGISwapChain* self,
+                                                   UINT sync_interval,
+                                                   UINT flags);
 };
 } // namespace perfcat::hooks
 #endif

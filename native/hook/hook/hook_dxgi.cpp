@@ -4,16 +4,13 @@
 
 #ifdef _WIN32
 namespace perfcat::hooks {
-HookDxgi::idxgi_swapchain_present_t HookDxgi::present_{
-    HookDxgi::idxgiSwapchainPresent};
-
-HRESULT HookDxgi::idxgiSwapchainPresent(IDXGISwapChain* self,
-                                        UINT sync_interval, UINT flags) {
+HRESULT HookDxgi::idxgi_swapchain_present(IDXGISwapChain* self,
+                                          UINT sync_interval, UINT flags) {
   std::cout << "IDXGISwapChain::Present hooked" << std::endl;
 
   {
     HookDxgi::instance().origin_guard(
-        reinterpret_cast<std::uintptr_t>(present_));
+        reinterpret_cast<std::uintptr_t>(idxgi_swapchain_present));
     return self->Present(sync_interval, flags);
   }
 }
@@ -23,7 +20,8 @@ bool HookDxgi::attach() {
   IDXGISwapChain* swap_chain = nullptr;
 
   bool res = true;
-  res &= hook_by_vtable((uintptr_t)swap_chain, 8, (uintptr_t)present_);
+  res &= hook_by_vtable((uintptr_t)swap_chain, 8,
+                        (uintptr_t)idxgi_swapchain_present);
   return res;
 }
 } // namespace perfcat::hooks
