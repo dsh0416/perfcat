@@ -51,6 +51,24 @@ bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
   return true;
 }
 
+bool IHookWin::hook_by_name(const std::string& module,
+                            const std::string& original,
+                            std::uintptr_t hooked) {
+  auto addr = reinterpret_cast<std::uintptr_t>(
+      GetProcAddress(GetModuleHandleA(module.c_str()), original.c_str()));
+  if (!addr) {
+    return false;
+  }
+
+  return hook_by_addr(addr, hooked);
+}
+
+bool IHookWin::hook_by_vtable(std::uintptr_t klass, std::size_t index,
+                              std::uintptr_t hooked) {
+  auto vtable = *reinterpret_cast<std::uintptr_t**>(klass);
+  return hook_by_addr(vtable[index], hooked);
+}
+
 bool IHookWin::remove_hook(std::uintptr_t addr) {
   if (hooks_.find(addr) == hooks_.end()) {
     return false;
