@@ -16,14 +16,17 @@ jobs:
       working-directory: native
       shell: bash
       run: |
-        cd native
         bash setup.sh
-    - name: Build project
-      uses: nicledomaS/cmake_build_action@v1.4
-      working-directory: native
+    - name: Setup Cmake
+      uses: jwlawson/actions-setup-cmake@v1.12
       with:
-        config: ${{ matrix.configs }}
-        cmake_args: -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake;-DFIND_MODULES=ON;-DENABLE_TIDY=ON
+        cmake-version: '3.24.x'
+    - name: Build project
+      shell: bash
+      working-directory: native
+      run: |
+        cmake -DCMAKE_TOOLCHAIN_FILE:STRING=vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
+        cmake --build build --config ${{ matrix.configs }} --target all --
     - uses: actions/upload-artifact@v2
       with:
         path: build/*.tar.gz
