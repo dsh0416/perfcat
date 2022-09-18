@@ -9,6 +9,8 @@ set(PERFCAT_HOOK_SOURCE_FILES
   pch.hpp
   exports.cpp
   hook/hook.hpp
+  hook/hook_win.cpp
+  hook/hook_win.hpp
 )
 
 add_library(perfcat_hook SHARED ${PERFCAT_HOOK_SOURCE_FILES})

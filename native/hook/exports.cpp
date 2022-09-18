@@ -7,5 +7,7 @@
 #endif
 
 extern "C" {
-void EXPORTS_API perfcat_hook_init(perfcat_hook_init_t args) { return; }
+void EXPORTS_API perfcat_hook_init(perfcat::perfcat_hook_init_t args) {
+  return;
+}
 }

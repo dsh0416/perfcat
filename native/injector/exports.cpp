@@ -37,7 +37,7 @@ bool EXPORTS_API perfcat_installer_destroy(void* installer) {
 }
 
 bool EXPORTS_API perfcat_installer_install(void* installer,
-                                           perfcat_hook_init_t* args) {
+                                           perfcat::perfcat_hook_init_t* args) {
   if (!installer || !args) {
     return false;
   }
