@@ -1,0 +1,29 @@
+name: Perfcat Native CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        configs: [Release, Debug]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.0.0
+    - name: Install dependencies
+      working-directory: ./native
+      run: |
+        cd native
+        bash setup.sh
+    - name: Build project
+      uses: nicledomaS/cmake_build_action@v1.4
+      working-directory: ./native
+      with:
+        config: ${{ matrix.configs }}
+        cmake_args: -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake;-DFIND_MODULES=ON;-DENABLE_TIDY=ON
+    - uses: actions/upload-artifact@v2
+      with:
+        path: build/*.tar.gz
+        name: artifact_${{ matrix.os }}_${{ matrix.configs }}.tar.gz
