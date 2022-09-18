@@ -19,3 +19,10 @@
 
 #define DIRECTINPUT_VERSION 0x800
 #endif
+
+struct perfcat_hook_init_args {
+  const char* work_dir;
+  const char* args[32];
+  int args_len;
+};
+using perfcat_hook_init_t = void (*)(struct perfcat_hook_init_args& args);

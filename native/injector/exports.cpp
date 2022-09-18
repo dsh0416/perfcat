@@ -36,15 +36,13 @@ bool EXPORTS_API perfcat_installer_destroy(void* installer) {
   return true;
 }
 
-bool EXPORTS_API perfcat_installer_install(void* installer, const uint8_t* args,
-                                   size_t args_size) {
-  if (!installer || !args || !args_size) {
+bool EXPORTS_API perfcat_installer_install(void* installer, perfcat_hook_init_t args) {
+  if (!installer || !args) {
     return false;
   }
 
   auto installer_ptr = reinterpret_cast<perfcat::IInstaller*>(installer);
-  std::vector<uint8_t> args_vec(args, args + args_size);
-  return installer_ptr->install(args_vec);
+  return installer_ptr->install(args);
 }
 
 bool EXPORTS_API perfcat_process_create(const char* work_dir, const char* args[],

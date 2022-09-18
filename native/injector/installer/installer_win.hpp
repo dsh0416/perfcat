@@ -11,7 +11,7 @@ namespace perfcat {
 class InstallerWin : public IInstaller {
 public:
   InstallerWin(ProcessWin& process) : process_(process), IInstaller(process){};
-  bool install(std::vector<uint8_t>& args) override;
+  bool install(perfcat_hook_init_t& args) override;
 
 private:
   bool is_x64() const;

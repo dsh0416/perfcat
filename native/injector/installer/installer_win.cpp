@@ -6,7 +6,7 @@
 namespace perfcat {
 typedef BOOL(WINAPI* LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
 
-bool InstallerWin::install(std::vector<uint8_t>& args) {
+bool InstallerWin::install(perfcat_hook_init_t& args) {
   if (!process_.start()) {
     return false;
   }
@@ -39,7 +39,7 @@ bool InstallerWin::install(std::vector<uint8_t>& args) {
                 MEM_RELEASE);
 
   // perfcat_hook_init
-  auto args_len_bytes = args.size() * sizeof(uint8_t);
+  auto args_len_bytes = sizeof(args);
   auto remote_args = VirtualAllocEx(process_handle, nullptr, args_len_bytes,
                                     MEM_COMMIT, PAGE_READWRITE);
   auto remote_thread_perfcat_init = CreateRemoteThread(
@@ -50,8 +50,8 @@ bool InstallerWin::install(std::vector<uint8_t>& args) {
 
   WaitForSingleObject(remote_thread_perfcat_init, INFINITE);
 
-  WriteProcessMemory(process_handle, remote_args, args.data(), args_len_bytes,
-                     nullptr);
+  WriteProcessMemory(process_handle, remote_args, ((void*)args),
+                     args_len_bytes, nullptr);
 
   VirtualFreeEx(process_handle, remote_args, args_len_bytes, MEM_RELEASE);
   return true;
