@@ -15,9 +15,8 @@ bool InstallerWin::install(perfcat_hook_init_t& args) {
   auto process_handle = process_info.hProcess;
 
   // LoadLibraryA
-  auto is_x64 = this->is_x64();
   std::string library_path =
-      is_x64 ? "perfcat_hook.dll" : "perfcat_hook_x86.dll";
+      this->is_x64() ? "perfcat_hook.dll" : "perfcat_hook_x86.dll";
   auto library_path_bytesize = (library_path.size() + 1) * sizeof(std::uint8_t);
 
   auto remote_library_path =
