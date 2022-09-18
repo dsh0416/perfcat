@@ -48,15 +48,15 @@ bool EXPORTS_API perfcat_installer_install(void* installer,
 }
 
 bool EXPORTS_API perfcat_process_create(const char* work_dir,
-                                        const char* args[], int args_len,
+                                        const char* argv[], size_t argc,
                                         void** process) {
   if (process == nullptr) {
     return false;
   }
 
   std::vector<std::string> args_vec;
-  for (int i = 0; i < args_len; i++) {
-    args_vec.push_back(args[i]);
+  for (int i = 0; i < argc; i++) {
+    args_vec.push_back(argv[i]);
   }
 
 #ifdef _WIN32

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.17)
 
 project(perfcat_hook)
 
@@ -18,3 +18,17 @@ set(PERFCAT_HOOK_SOURCE_FILES
 add_library(perfcat_hook SHARED ${PERFCAT_HOOK_SOURCE_FILES})
 
 target_include_directories(perfcat_hook PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# openssl
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIRS})
+target_link_libraries(perfcat_hook PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+
+# curl
+find_package(CURL CONFIG REQUIRED)
+include_directories(${CURL_INCLUDE_DIR})
+target_link_libraries(perfcat_hook PRIVATE CURL::libcurl)
+
+if (WIN32)
+target_link_libraries(perfcat_hook PRIVATE d3d9 d3d11 d3d12 dxgi)
+endif(WIN32)

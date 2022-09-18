@@ -1,5 +1,8 @@
 {
   "cmake.sourceDirectory": "${workspaceFolder}/native",
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/native/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  },
   "cSpell.words": [
     "perfcat"
   ],
@@ -77,7 +80,23 @@
     "map": "cpp",
     "set": "cpp",
     "xhash": "cpp",
-    "xtree": "cpp"
+    "xtree": "cpp",
+    "charconv": "cpp",
+    "codecvt": "cpp",
+    "forward_list": "cpp",
+    "filesystem": "cpp",
+    "format": "cpp",
+    "iomanip": "cpp",
+    "iostream": "cpp",
+    "xfacet": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp"
   },
   "editor.formatOnSave": true,
   "files.eol": "\n"
