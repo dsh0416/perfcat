@@ -1,6 +1,6 @@
-name: Perfcat Native CI
+name: Build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
       working-directory: native
       if: matrix.os == 'macos-latest'
       run: |
-        cmake -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
+        cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
         cmake --build build --config ${{ matrix.configs }} --target all --
     - uses: actions/upload-artifact@v2
       with:
