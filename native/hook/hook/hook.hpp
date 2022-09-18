@@ -21,6 +21,6 @@ public:
 public:
   virtual bool attach() { return false; }
   virtual bool unload() { return false; }
-  virtual IHookOrigin origin_guard() { return std::move(IHookOrigin()); }
+  virtual IHookOrigin origin_guard(std::uintptr_t addr) { return {}; }
 };
 } // namespace perfcat::hooks

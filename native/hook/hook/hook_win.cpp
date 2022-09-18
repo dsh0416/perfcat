@@ -18,6 +18,10 @@ bool IHookWin::unload() {
   return res;
 }
 
+IHookOrigin IHookWin::origin_guard(std::uintptr_t addr) {
+  return std::move(HookOriginWin(*this, addr));
+}
+
 bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
   if (hooks_.find(original) != hooks_.end()) {
     return false;

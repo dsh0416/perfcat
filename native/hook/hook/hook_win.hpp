@@ -12,6 +12,7 @@ public:
 
 public:
   bool unload() override;
+  IHookOrigin origin_guard(std::uintptr_t addr) override;
 
 protected:
   bool hook_by_addr(std::uintptr_t original, std::uintptr_t hooked);
