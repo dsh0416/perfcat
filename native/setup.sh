@@ -12,5 +12,4 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   brew install curl openssl
   brew link --force openssl
-  pkg-config --modversion openssl
 fi
