@@ -24,8 +24,16 @@ jobs:
     - name: Build project
       shell: bash
       working-directory: native
+      if: matrix.os != 'macos-latest'
       run: |
         cmake -DCMAKE_TOOLCHAIN_FILE:STRING=vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
+        cmake --build build --config ${{ matrix.configs }} --target all --
+    - name: Build project (macOS)
+      shell: bash
+      working-directory: native
+      if: matrix.os == 'macos-latest'
+      run: |
+        cmake -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
         cmake --build build --config ${{ matrix.configs }} --target all --
     - uses: actions/upload-artifact@v2
       with:
