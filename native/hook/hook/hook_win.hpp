@@ -18,7 +18,7 @@ public:
   bool unload() override;
 
 public:
-  void setup_guard(std::uintptr_t addr, std::uintptr_t& hooked) {
+  void setup_guard(std::uintptr_t addr, std::uintptr_t& hooked) override {
     auto it = hooks_.find(addr);
     if (it != hooks_.end()) {
       // temporarily remove hook to use origin function
@@ -28,7 +28,7 @@ public:
       };
     }
   }
-  void remove_guard(std::uintptr_t addr, std::uintptr_t hooked) {
+  void remove_guard(std::uintptr_t addr, std::uintptr_t hooked) override {
     if (hooked != 0) {
       hook_by_addr(addr, hooked);
     }
@@ -59,9 +59,6 @@ protected:
 #endif
   std::unordered_map<std::uintptr_t, std::pair<jmp_t, std::uintptr_t>>
       hooks_; // addr, {original, hooked}
-
-protected:
-  friend class hook_guard<IHookWin>;
 };
 } // namespace perfcat::hooks
 #endif

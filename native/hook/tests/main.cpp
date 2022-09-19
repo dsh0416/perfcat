@@ -27,7 +27,7 @@ int main() {
   assert(function_foo(1, 2) == -1);
 
   {
-    perfcat::hooks::hook_guard<HookExample> guard_foo(
+    perfcat::hooks::hook_guard guard_foo(
         HookExample::instance(),
         reinterpret_cast<std::uintptr_t>(function_foo));
 

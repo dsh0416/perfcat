@@ -9,9 +9,8 @@ HRESULT HookDxgi::idxgi_swapchain_present(IDXGISwapChain* self,
   std::cout << "IDXGISwapChain::Present hooked" << std::endl;
 
   {
-    hook_guard<HookDxgi> guard(
-        HookDxgi::instance(),
-        reinterpret_cast<std::uintptr_t>(idxgi_swapchain_present));
+    hook_guard guard(HookDxgi::instance(),
+                     reinterpret_cast<std::uintptr_t>(idxgi_swapchain_present));
     return self->Present(sync_interval, flags);
   }
 }
