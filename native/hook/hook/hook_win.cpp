@@ -18,10 +18,6 @@ bool IHookWin::unload() {
   return res;
 }
 
-IHookOrigin IHookWin::origin_guard(std::uintptr_t addr) {
-  return std::move(HookOriginWin(*this, addr));
-}
-
 bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
   if (hooks_.find(original) != hooks_.end()) {
     return false;
@@ -34,8 +30,7 @@ bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
   std::memcpy(&jmp[1], &hooked, sizeof(hooked));
 #endif
 
-  jmp_t jmp_original;
-  std::memcpy(&jmp[0], reinterpret_cast<void*>(original), jmp.size());
+  jmp_t jmp_original{0};
 
   DWORD protect;
   if (!VirtualProtect(reinterpret_cast<void*>(original), jmp.size(),
@@ -43,7 +38,9 @@ bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
     return false;
   }
 
+  std::memcpy(&jmp_original[0], reinterpret_cast<void*>(original), jmp.size());
   std::memcpy(reinterpret_cast<void*>(original), &jmp[0], jmp.size());
+
   VirtualProtect(reinterpret_cast<void*>(original), jmp.size(), protect,
                  &protect);
 
@@ -88,24 +85,6 @@ bool IHookWin::remove_hook(std::uintptr_t addr) {
 
   hooks_.erase(addr);
   return true;
-}
-
-HookOriginWin::HookOriginWin(IHookWin& hook, std::uintptr_t addr)
-    : IHookOrigin(), hook_(hook), addr_(addr) {
-  auto it = hook_.hooks_.find(addr_);
-  if (it != hook_.hooks_.end()) {
-    // temporarily remove hook to use origin function
-    if (hook_.remove_hook(addr_)) {
-      hooked_ = it->second.second;
-    };
-  }
-}
-
-HookOriginWin::~HookOriginWin() {
-  if (hooked_ != 0) {
-    // hook the address back
-    hook_.hook_by_addr(addr_, hooked_);
-  }
 }
 } // namespace perfcat::hooks
 #endif

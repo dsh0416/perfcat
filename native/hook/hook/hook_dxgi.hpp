@@ -11,6 +11,10 @@ namespace perfcat::hooks {
 class HookDxgi : public IHookWin {
 public:
   using IHookWin::IHookWin;
+  static HookDxgi& instance() {
+    static HookDxgi instance;
+    return instance;
+  }
   bool attach() override;
 
 private:

@@ -3,12 +3,6 @@
 #include "pch.hpp"
 
 namespace perfcat::hooks {
-class IHookOrigin {
-public:
-  IHookOrigin() = default;
-  virtual ~IHookOrigin() = default;
-};
-
 class IHook {
 public:
   IHook() = default;
@@ -21,6 +15,18 @@ public:
 public:
   virtual bool attach() { return false; }
   virtual bool unload() { return false; }
-  virtual IHookOrigin origin_guard(std::uintptr_t addr) { return {}; }
+};
+
+template <typename T> class hook_guard {
+public:
+  explicit hook_guard(T& hook, std::uintptr_t addr) : hook_(hook), addr_(addr) {
+    hook_.setup_guard(addr_, hooked_);
+  }
+  ~hook_guard() { hook_.remove_guard(addr_, hooked_); }
+
+private:
+  std::uintptr_t hooked_ = 0;
+  std::uintptr_t addr_ = 0;
+  T& hook_;
 };
 } // namespace perfcat::hooks

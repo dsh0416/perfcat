@@ -9,10 +9,30 @@ namespace perfcat::hooks {
 class IHookWin : public IHook {
 public:
   IHookWin() = default;
+  static IHookWin& instance() {
+    static IHookWin instance;
+    return instance;
+  }
 
 public:
   bool unload() override;
-  IHookOrigin origin_guard(std::uintptr_t addr) override;
+
+public:
+  void setup_guard(std::uintptr_t addr, std::uintptr_t& hooked) {
+    auto it = hooks_.find(addr);
+    if (it != hooks_.end()) {
+      // temporarily remove hook to use origin function
+      hooked = it->second.second;
+      if (!remove_hook(addr)) {
+        hooked = 0;
+      };
+    }
+  }
+  void remove_guard(std::uintptr_t addr, std::uintptr_t hooked) {
+    if (hooked != 0) {
+      hook_by_addr(addr, hooked);
+    }
+  }
 
 protected:
   bool hook_by_addr(std::uintptr_t original, std::uintptr_t hooked);
@@ -40,19 +60,8 @@ protected:
   std::unordered_map<std::uintptr_t, std::pair<jmp_t, std::uintptr_t>>
       hooks_; // addr, {original, hooked}
 
-private:
-  friend class HookOriginWin;
-};
-
-class HookOriginWin : public IHookOrigin {
-public:
-  HookOriginWin(IHookWin& hook, std::uintptr_t addr);
-  ~HookOriginWin();
-
-private:
-  IHookWin& hook_;
-  std::uintptr_t addr_ = 0;
-  std::uintptr_t hooked_ = 0;
+protected:
+  friend class hook_guard<IHookWin>;
 };
 } // namespace perfcat::hooks
 #endif
