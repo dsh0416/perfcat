@@ -9,10 +9,6 @@ namespace perfcat::hooks {
 class IHookWin : public IHook {
 public:
   IHookWin() = default;
-  static IHookWin& instance() {
-    static IHookWin instance;
-    return instance;
-  }
 
 public:
   bool unload() override;
