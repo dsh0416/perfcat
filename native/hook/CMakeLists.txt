@@ -38,11 +38,9 @@ endif(WIN32)
 # Testing
 set(PERFCAT_HOOK_SOURCE_TESTS_FILES
   ${PERFCAT_HOOK_SOURCE_FILES}
+  tests/main_win.hpp
   tests/main.cpp
 )
 
 add_executable(perfcat_hook_tests ${PERFCAT_HOOK_SOURCE_TESTS_FILES})
 target_include_directories(perfcat_hook_tests PRIVATE  ${PERFCAT_HOOK_INCLUDE})
-
-enable_testing()
-add_test(NAME run_test COMMAND perfcat_hook_tests)
