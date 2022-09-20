@@ -19,6 +19,8 @@ bool IHookWin::unload() {
 }
 
 bool IHookWin::hook_by_addr(std::uintptr_t original, std::uintptr_t hooked) {
+  std::lock_guard lock(hooks_mutex_);
+
   if (hooks_.find(original) != hooks_.end()) {
     return false;
   }
@@ -67,6 +69,8 @@ bool IHookWin::hook_by_vtable(std::uintptr_t klass, std::size_t index,
 }
 
 bool IHookWin::remove_hook(std::uintptr_t addr) {
+  std::lock_guard lock(hooks_mutex_);
+
   if (hooks_.find(addr) == hooks_.end()) {
     return false;
   }

@@ -55,6 +55,9 @@ protected:
 #endif
   std::unordered_map<std::uintptr_t, std::pair<jmp_t, std::uintptr_t>>
       hooks_; // addr, {original, hooked}
+
+private:
+  std::mutex hooks_mutex_;
 };
 } // namespace perfcat::hooks
 #endif

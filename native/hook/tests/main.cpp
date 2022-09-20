@@ -3,9 +3,11 @@
 
 #include "hook/hook_win.hpp"
 
+using namespace perfcat::hooks;
+
 int function_foo(int a, int b) { return a + b; }
 
-class HookExample : public perfcat::hooks::IHookWin {
+class HookExample : public IHookWin {
 public:
   using IHookWin::IHookWin;
   static HookExample& instance() {
@@ -27,9 +29,8 @@ int main() {
   assert(function_foo(1, 2) == -1);
 
   {
-    perfcat::hooks::hook_guard guard_foo(
-        HookExample::instance(),
-        reinterpret_cast<std::uintptr_t>(function_foo));
+    hook_guard guard_foo(HookExample::instance(),
+                         reinterpret_cast<std::uintptr_t>(function_foo));
 
     assert(function_foo(1, 2) == 3);
   }
