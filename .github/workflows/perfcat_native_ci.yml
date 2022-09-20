@@ -35,6 +35,11 @@ jobs:
       run: |
         cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DCMAKE_BUILD_TYPE:STRING=${{ matrix.configs }} -B build -S .
         cmake --build build --config ${{ matrix.configs }} --target all --
+    - name: CTest
+      shell: bash
+      working-directory: native
+      run: |
+        ctest
     - uses: actions/upload-artifact@v2
       with:
         path: build/*.tar.gz
